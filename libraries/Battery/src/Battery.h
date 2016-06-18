@@ -9,9 +9,9 @@
 #define LIBRARIES_BATTERY_BATTERY_H_
 
 #include <Arduino.h>
-#include <avr/sleep.h>
+//#include <avr/sleep.h>
 //#include <Bridge.h>
-#include <Console.h>
+//#include <Console.h>
 
 
 class Battery

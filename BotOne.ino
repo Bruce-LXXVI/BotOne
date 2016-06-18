@@ -1,7 +1,7 @@
 
 #include <Arduino.h>
 //#include <Bridge.h>
-#include <Console.h>
+//#include <Console.h>
 #include <Servo.h>
 
 #include "libraries/Battery/src/Battery.h"
@@ -44,10 +44,9 @@ int headDirection = 0;
 //The setup function is called once at startup of the sketch
 void setup()
 {
-	sleep_disable();
-
 	// initialize serial communication:
-	Console.begin();
+	//Bridge.begin();
+	//Console.begin();
 
 	pinMode(ledPin, OUTPUT);
 	digitalWrite(ledPin, LOW);
@@ -78,7 +77,7 @@ void setup()
 		; // wait for Console port to connect.
 	}
 	*/
-	Console.println("You're connected to the Console!!!!");
+	//Console.println("You're connected to the Console!!!!");
 
 }
 
@@ -88,7 +87,7 @@ void loop()
 	//if(time == 0) time=millis();
 	battery.update();
 
-/*
+
 	if( (millis() - time) > 2000 ) {
 		time=millis();
 
@@ -114,7 +113,7 @@ void loop()
 		else headDirection = 30;
 		headServo.write(90 + headDirection + headOffset);
 	}
-*/
+
 
 /*
 	// Nach 5 Sekunden anhalten
