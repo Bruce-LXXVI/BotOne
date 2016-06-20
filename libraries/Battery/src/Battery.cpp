@@ -32,17 +32,17 @@ void Battery::update()
 		if(_blinkCount > reportEveryInterval)
 		{
 			_blinkCount=0;
-			/*
+
 			Console.print("Battery report: Cell 1=");
 			Console.print(_v1);
 			Console.print("V | Cell 2=");
 			Console.print(_v2);
 			Console.println("V");
-			*/
+
 
 			if( (_v1 < MIN_CELL_VOLT) || (_v2 < MIN_CELL_VOLT) )
 			{
-				//Console.println("SHUTDOWN!!");
+				Console.println("SHUTDOWN!!");
 				digitalWrite(13, HIGH);
 				// http://www.arduino.cc/playground/Learning/ArduinoSleepCode
 				//set_sleep_mode(SLEEP_MODE_PWR_DOWN);

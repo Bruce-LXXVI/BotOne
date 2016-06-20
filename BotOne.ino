@@ -1,7 +1,7 @@
 
 #include <Arduino.h>
-//#include <Bridge.h>
-//#include <Console.h>
+#include <Bridge.h>
+#include <Console.h>
 #include <Servo.h>
 
 #include "libraries/Battery/src/Battery.h"
@@ -45,8 +45,8 @@ int headDirection = 0;
 void setup()
 {
 	// initialize serial communication:
-	//Bridge.begin();
-	//Console.begin();
+	Bridge.begin();
+	Console.begin();
 
 	pinMode(ledPin, OUTPUT);
 	digitalWrite(ledPin, LOW);
@@ -65,11 +65,19 @@ void setup()
 	headServo.attach(headServoPin);
 	headServo.write(90 + headOffset);
 
-	motorServo.attach(motorServoPin);
-	motorServo.write(90 + motorOffset);
 
-	steeringServo.attach(steeringServoPin);
-	steeringServo.write(90 + steeringOffset);
+	pinMode(motorServoPin, OUTPUT);
+	digitalWrite(motorServoPin, LOW);
+	//motorServo.attach(motorServoPin);
+	//motorServo.write(90 + motorOffset);
+
+
+	pinMode(steeringOffset, OUTPUT);
+	digitalWrite(steeringServoPin, LOW);
+	//steeringServo.attach(steeringServoPin);
+	//steeringServo.write(90 + steeringOffset);
+
+
 
 	/*
 	while (!Console)
@@ -77,7 +85,7 @@ void setup()
 		; // wait for Console port to connect.
 	}
 	*/
-	//Console.println("You're connected to the Console!!!!");
+	Console.println("You're connected to the Console!!!!");
 
 }
 
@@ -87,7 +95,7 @@ void loop()
 	//if(time == 0) time=millis();
 	battery.update();
 
-
+/*
 	if( (millis() - time) > 2000 ) {
 		time=millis();
 
@@ -113,7 +121,7 @@ void loop()
 		else headDirection = 30;
 		headServo.write(90 + headDirection + headOffset);
 	}
-
+*/
 
 /*
 	// Nach 5 Sekunden anhalten
