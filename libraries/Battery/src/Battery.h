@@ -12,6 +12,7 @@
 //#include <avr/sleep.h>
 #include <Bridge.h>
 #include <Console.h>
+#include "../../Led/src/Led.hpp"
 
 
 class Battery
@@ -20,6 +21,8 @@ class Battery
 public:
 	Battery();
 	void update();
+	void setCheckLed(Led *led);
+	void setAlarmLed(Led *led);
 
 
 private:
@@ -31,9 +34,10 @@ private:
 	float _v1;
 	float _v2;
 
+	Led *_ledAlarm;
+	Led *_ledCheck;
 
 
-	const int ledBluePin = 4;
 	const int reportEveryInterval= 20;
 	const unsigned long INTERVAL = 500;
 	const float MIN_CELL_VOLT = 3.8;

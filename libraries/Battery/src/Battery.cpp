@@ -13,9 +13,21 @@ Battery::Battery()
 	_blinkCount = 0;
 	_v1=0.0;
 	_v2=0.0;
+	_ledAlarm=NULL;
+	_ledCheck=NULL;
 };
 
 
+void Battery::setCheckLed(Led *led)
+{
+	_ledCheck=led;
+}
+
+
+void Battery::setAlarmLed(Led *led)
+{
+	_ledAlarm=led;
+}
 
 
 void Battery::update()
@@ -43,7 +55,7 @@ void Battery::update()
 			if( (_v1 < MIN_CELL_VOLT) || (_v2 < MIN_CELL_VOLT) )
 			{
 				Console.println("SHUTDOWN!!");
-				digitalWrite(13, HIGH);
+				if(_ledAlarm != NULL) _ledAlarm->setBlinker(100, 100);
 				// http://www.arduino.cc/playground/Learning/ArduinoSleepCode
 				//set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 				//sleep_enable();
@@ -54,10 +66,10 @@ void Battery::update()
 
 		if(_blinker)
 		{
-			digitalWrite(ledBluePin, HIGH);
+			if(_ledCheck != NULL) _ledCheck->setOn();
 		} else
 		{
-			digitalWrite(ledBluePin, LOW);
+			if(_ledCheck != NULL) _ledCheck->setOff();
 		}
 		_blinker=!_blinker;
 	};

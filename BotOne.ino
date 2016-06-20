@@ -5,6 +5,7 @@
 #include <Servo.h>
 
 #include "libraries/Battery/src/Battery.h"
+#include "libraries/Led/src/Led.hpp"
 
 
 // LED on board
@@ -31,9 +32,16 @@ const int steeringOffset = 3;
 
 // Initialize vars
 Battery battery;
+Led led(ledPin);
+Led ledRed(ledRedPin);
+Led ledYellow(ledYellowPin);
+Led ledGreen(ledGreenPin);
+Led ledBlue(ledBluePin);
+
 Servo headServo;
 Servo motorServo;
 Servo steeringServo;
+
 
 unsigned long time = 0;
 int ledState = LOW;
@@ -48,18 +56,18 @@ void setup()
 	Bridge.begin();
 	Console.begin();
 
-	pinMode(ledPin, OUTPUT);
-	digitalWrite(ledPin, LOW);
-	pinMode(ledRedPin, OUTPUT);
-	digitalWrite(ledRedPin, LOW);
-	pinMode(ledYellowPin, OUTPUT);
-	digitalWrite(ledYellowPin, LOW);
-	pinMode(ledGreenPin, OUTPUT);
-	digitalWrite(ledGreenPin, LOW);
-	pinMode(ledBluePin, OUTPUT);
-	digitalWrite(ledBluePin, LOW);
+	led.setup();
+	ledRed.setup();
+	ledRed.setBlinker(100, 1000);
+	ledYellow.setup();
+	ledGreen.setup();
+	ledBlue.setup();
+
+	//battery.setCheckLed(&ledBlue);
+	battery.setAlarmLed(&led);
+
 	//pinMode(usPin, OUTPUT);
-	digitalWrite(usPin, LOW);
+	//digitalWrite(usPin, LOW);
 
 
 	headServo.attach(headServoPin);
@@ -94,6 +102,13 @@ void loop()
 {
 	//if(time == 0) time=millis();
 	battery.update();
+
+	led.update();
+	ledRed.update();
+	ledYellow.update();
+	ledGreen.update();
+	ledBlue.update();
+
 
 /*
 	if( (millis() - time) > 2000 ) {
