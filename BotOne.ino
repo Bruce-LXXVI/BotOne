@@ -11,8 +11,8 @@
 const int ledPin = 13;
 
 // LEDs on head
-const int ledRedPin = 0;
-const int ledYellowPin = 1;
+const int ledRedPin = 8;
+const int ledYellowPin = 9;
 const int ledGreenPin = 2;
 const int ledBluePin = 4;
 const int usPin = 7;
