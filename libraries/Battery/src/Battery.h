@@ -40,7 +40,7 @@ private:
 
 	const int reportEveryInterval= 20;
 	const unsigned long INTERVAL = 500;
-	const float MIN_CELL_VOLT = 3.8;
+	const float MIN_CELL_VOLT = 3.9;
 
 
 };
