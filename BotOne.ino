@@ -6,6 +6,7 @@
 
 #include "libraries/Battery/src/Battery.h"
 #include "libraries/Led/src/Led.hpp"
+#include "libraries/Drive/src/Drive.hpp"
 
 
 // LED on board
@@ -27,7 +28,7 @@ const int steeringServoPin = 6;
 // Calibration
 const int headOffset = 0;
 const int motorOffset = 1;
-const int steeringOffset = 3;
+const int steeringOffset = 4;
 
 
 // Initialize vars
@@ -38,8 +39,12 @@ Led ledYellow(ledYellowPin);
 Led ledGreen(ledGreenPin);
 Led ledBlue(ledBluePin);
 
+Drive_Motor_Servo motorServo(motorServoPin);
+Drive drive(&motorServo);
+
+
 Servo headServo;
-Servo motorServo;
+
 Servo steeringServo;
 
 
@@ -66,6 +71,11 @@ void setup()
 	//battery.setCheckLed(&ledBlue);
 	battery.setAlarmLed(&led);
 
+
+	drive.setup();
+
+
+
 	//pinMode(usPin, OUTPUT);
 	//digitalWrite(usPin, LOW);
 
@@ -74,16 +84,12 @@ void setup()
 	headServo.write(90 + headOffset);
 
 
-	pinMode(motorServoPin, OUTPUT);
-	digitalWrite(motorServoPin, LOW);
-	//motorServo.attach(motorServoPin);
-	//motorServo.write(90 + motorOffset);
 
 
 	pinMode(steeringOffset, OUTPUT);
 	digitalWrite(steeringServoPin, LOW);
-	//steeringServo.attach(steeringServoPin);
-	//steeringServo.write(90 + steeringOffset);
+	steeringServo.attach(steeringServoPin);
+	steeringServo.write(90 + steeringOffset);
 
 
 
@@ -100,7 +106,8 @@ void setup()
 // The loop function is called in an endless loop
 void loop()
 {
-	//if(time == 0) time=millis();
+	if(time == 0) time=millis();
+
 	battery.update();
 
 	led.update();
@@ -109,48 +116,45 @@ void loop()
 	ledGreen.update();
 	ledBlue.update();
 
-
-/*
-	if( (millis() - time) > 2000 ) {
-		time=millis();
+	drive.update();
 
 
-		ledNum++;
-		if(ledNum > 4) ledNum = 0;
-		digitalWrite(ledPin, ledNum==0 ? HIGH : LOW);
-		digitalWrite(ledRedPin, ledNum==1 ? HIGH : LOW);
-		digitalWrite(ledYellowPin, ledNum==2 ? HIGH : LOW);
-		digitalWrite(ledGreenPin, ledNum==3 ? HIGH : LOW);
-		digitalWrite(ledBluePin, ledNum==4 ? HIGH : LOW);
+	if( Console.available() > 0 )
+	{
+		char c=Console.read();
+		if(c == ' ') time=millis();
+		if(c == 'a') {
+			steeringServo.write(105 + steeringOffset);
+		}
+		if(c == 'd') {
+			steeringServo.write(75 + steeringOffset);
+		}
+		if(c == 'w') {
+			steeringServo.write(90 + steeringOffset);
+		}
 
-
-
-
-		if(ledState == LOW) ledState = HIGH;
-		else ledState = LOW;
-
-
-
-
-		if(headDirection > 0) headDirection = -30;
-		else headDirection = 30;
-		headServo.write(90 + headDirection + headOffset);
 	}
-*/
 
-/*
-	// Nach 5 Sekunden anhalten
-	if( (millis() - time) > 5000 ) {
-		motorServo.write(90 + motorOffset);
-		steeringServo.write(90 + steeringOffset);
-		digitalWrite(ledPin, HIGH);
+
+	// Nach 10 Sekunden anhalten
+	if( (millis() - time) > 2000 ) {
+		ledBlue.setBlinker(200);
+		drive.stopEngine();
 	} else {
+
+		ledBlue.setOff();
+		drive.startEngine();
+		drive.setSpeedPercent(15);
+		drive.forward();
+
+		/*
 		// <90 rechts / >90 links
 		steeringServo.write(80 + steeringOffset);
 
 		// <90 vorwärts / >90 rückwärts
 		motorServo.write(80 + motorOffset);
+		*/
 	}
-*/
+
 
 }

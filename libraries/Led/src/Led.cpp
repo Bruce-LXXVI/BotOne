@@ -60,15 +60,16 @@ void Led::setBlinker(unsigned long onMs /* =0 */, unsigned long offMs /* =0 */)
 {
 	if(onMs > 0)
 	{
-		this->_blinker=false;
+		//this->_blinker=false;
+		this->_function=Led::FN_BLINKER;
 		this->_onMs=onMs;
 		if(offMs > 0) this->_offMs=offMs;
 		else this->_offMs=onMs;
+		return;
 	}
 
 	if( this->_digitalWrite( this->_blinker=!this->_blinker ) )
 	{
-		this->_function=Led::FN_BLINKER;
 		if(this->_blinker) this->_interval=this->_onMs;
 		else this->_interval=this->_offMs;
 	}
