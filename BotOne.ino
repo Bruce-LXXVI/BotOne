@@ -49,9 +49,12 @@ Servo steeringServo;
 
 
 unsigned long time = 0;
+unsigned long timeSteer = 0;
 int ledState = LOW;
 int ledNum = 0;
 int headDirection = 0;
+int steerDirection = 0;
+int speedPercent = 10;
 
 
 //The setup function is called once at startup of the sketch
@@ -100,13 +103,22 @@ void setup()
 	}
 	*/
 	Console.println("You're connected to the Console!!!!");
+	/*
+	Console.write('\377');
+	Console.write('\375');
+	Console.write('\042');
+	Console.write('\377');
+	Console.write('\373');
+	Console.write('\001');
+	*/
 
 }
 
 // The loop function is called in an endless loop
 void loop()
 {
-	if(time == 0) time=millis();
+	//if(time == 0) time=millis();
+	if(timeSteer == 0) timeSteer=millis();
 
 	battery.update();
 
@@ -122,30 +134,70 @@ void loop()
 	if( Console.available() > 0 )
 	{
 		char c=Console.read();
-		if(c == ' ') time=millis();
-		if(c == 'a') {
-			steeringServo.write(105 + steeringOffset);
+
+		// q=schneller / y=langsamer
+		if(c == 'q') speedPercent=speedPercent + 1;
+		if(c == 'y') speedPercent=speedPercent - 1;
+		if(speedPercent > 100) speedPercent=100;
+		if(speedPercent < 0) speedPercent=0;
+		if( (c == 'q') || (c == 'y')) drive.setSpeedPercent(speedPercent);
+
+		// w=vorwärts / s=rückwärts
+		if( c == 'w' )
+		{
+			if( drive.isStopped() )
+			{
+				drive.setDirection(Drive::DIR_FORWARD);
+				drive.startEngine();
+				drive.setSpeedPercent(speedPercent);
+				drive.drive();
+			} else
+			{
+				drive.stopEngine();
+			}
 		}
-		if(c == 'd') {
-			steeringServo.write(75 + steeringOffset);
-		}
-		if(c == 'w') {
-			steeringServo.write(90 + steeringOffset);
+		if( c == 's' )
+		{
+			if( drive.isStopped() )
+			{
+				drive.setDirection(Drive::DIR_BACKWARD);
+				drive.startEngine();
+				drive.setSpeedPercent(speedPercent);
+				drive.drive();
+			} else
+			{
+				drive.stopEngine();
+			}
 		}
 
+		// a=links / d=rechts
+		if(c == 'a') steerDirection=steerDirection + 3;
+		if(c == 'd') steerDirection=steerDirection - 3;
+		if( (c == 'd') || (c == 'a') ) timeSteer=millis();
+		if( (c != 'a') && (c != 'd') && (steerDirection > 0) ) steerDirection=steerDirection - 1;
+		if( (c != 'a') && (c != 'd') && (steerDirection < 0) ) steerDirection=steerDirection + 1;
+		if(steerDirection > 50) steerDirection=50;
+		if(steerDirection < -50) steerDirection=-50;
 	}
+	if( millis() - timeSteer > 150)
+	{
+		timeSteer=millis();
+		if( steerDirection > 0 ) steerDirection=steerDirection - (1 + steerDirection / 3);
+		if( steerDirection < 0 ) steerDirection=steerDirection - (1 + steerDirection / 3);
+	}
+
+	steeringServo.write(90 + steeringOffset + steerDirection);
+
+	if(drive.isStopped()) ledYellow.setOff();
+	else ledYellow.setBlinker(100);
 
 
 	// Nach 10 Sekunden anhalten
-	if( (millis() - time) > 2000 ) {
-		ledBlue.setBlinker(200);
-		drive.stopEngine();
-	} else {
+	if( (millis() - time) > 5000 ) {
+		//ledBlue.setBlinker(200);
 
-		ledBlue.setOff();
-		drive.startEngine();
-		drive.setSpeedPercent(15);
-		drive.forward();
+	} else {
+		//ledBlue.setOff();
 
 		/*
 		// <90 rechts / >90 links

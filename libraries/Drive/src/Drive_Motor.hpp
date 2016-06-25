@@ -21,12 +21,14 @@ public:
 	virtual void stopEngine(){};
 
 	virtual void setSpeedPercent(int percent){};
+	virtual void setDirection(int direction){};
 
 	virtual void stop(){};
-	virtual void forward(){};
+	virtual void drive(){};
 
 	virtual bool isReady(){ return false; };
 	virtual bool isRunning(){ return false; };
+	virtual bool isStopped(){ return true; };
 
 	virtual ~Drive_Motor(){};
 

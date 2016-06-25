@@ -19,15 +19,21 @@ public:
 	Drive(Drive_Motor *motor=NULL);
 	void setup(Drive_Motor *motor=NULL);
 	void update();
+
 	bool isMotorReady();
+	bool isStopped();
 
 	void startEngine();
 	void stopEngine();
 
 	void setSpeedPercent(int percent);
+	void setDirection(int direction);
+	const static int DIR_UNDEF=0;
+	const static int DIR_FORWARD=1;
+	const static int DIR_BACKWARD=2;
 
 	void stop();
-	void forward();
+	void drive();
 
 
 	const static int MOTORTYPE_NONE=0;

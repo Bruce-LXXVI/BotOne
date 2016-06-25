@@ -26,6 +26,13 @@ bool Drive::isMotorReady()
 	return (this->_motor != NULL) && this->_motor->isReady();
 }
 
+
+bool Drive::isStopped()
+{
+	return !this->isMotorReady() || this->_motor->isStopped();
+}
+
+
 void Drive::update()
 {
 };
@@ -49,14 +56,20 @@ void Drive::setSpeedPercent(int percent)
 };
 
 
+void Drive::setDirection(int direction)
+{
+	if(this->isMotorReady()) this->_motor->setDirection(direction);
+};
+
+
 void Drive::stop()
 {
 	if(this->isMotorReady()) this->_motor->stop();
 };
 
 
-void Drive::forward()
+void Drive::drive()
 {
-	if(this->isMotorReady()) this->_motor->forward();
+	if(this->isMotorReady()) this->_motor->drive();
 };
 

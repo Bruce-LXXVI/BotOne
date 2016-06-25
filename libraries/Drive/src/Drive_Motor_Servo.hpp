@@ -10,6 +10,7 @@
 
 #include <Arduino.h>
 #include <Servo.h>
+#include "Drive.hpp"
 #include "Drive_Motor.hpp"
 
 class Drive_Motor_Servo: public Drive_Motor
@@ -23,12 +24,14 @@ public:
 	void stopEngine();
 
 	void setSpeedPercent(int percent);
+	void setDirection(int direction);
 
 	void stop();
-	void forward();
+	void drive();
 
 	bool isReady();
 	bool isRunning();
+	bool isStopped();
 
 
 private:
@@ -36,6 +39,8 @@ private:
 	Servo *_servo;
 	int _motorOffset;
 	int _servoValue;
+	int _direction;
+	bool _stopped;
 
 };
 
